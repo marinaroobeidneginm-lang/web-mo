@@ -22,22 +22,43 @@ function writeAll(properties) {
   writeFileSync(DATA_FILE, JSON.stringify(properties, null, 2) + '\n', 'utf-8')
 }
 
-export function findAll({ tipo, operacion } = {}) {
-  let properties = readAll()
+function applyFilters(properties, { tipo, operacion } = {}) {
+  let result = properties
 
   if (tipo) {
-    properties = properties.filter(
-      (p) => p.tipo.toLowerCase() === tipo.toLowerCase(),
-    )
+    result = result.filter((p) => p.tipo.toLowerCase() === tipo.toLowerCase())
   }
 
   if (operacion) {
-    properties = properties.filter(
+    result = result.filter(
       (p) => p.operacion.toLowerCase() === operacion.toLowerCase(),
     )
   }
 
-  return properties
+  return result
+}
+
+export function findAll({ tipo, operacion } = {}) {
+  return applyFilters(readAll(), { tipo, operacion })
+}
+
+export function findPaginated({ tipo, operacion, page = 1, limit = 9 } = {}) {
+  const filtered = applyFilters(readAll(), { tipo, operacion })
+  const total = filtered.length
+  const totalPages = total === 0 ? 0 : Math.ceil(total / limit)
+  const safePage =
+    totalPages === 0 ? 1 : Math.min(Math.max(1, page), totalPages)
+  const start = (safePage - 1) * limit
+
+  return {
+    data: filtered.slice(start, start + limit),
+    pagination: {
+      page: safePage,
+      limit,
+      total,
+      totalPages,
+    },
+  }
 }
 
 export function findById(id) {

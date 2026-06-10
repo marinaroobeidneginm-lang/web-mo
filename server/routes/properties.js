@@ -8,7 +8,18 @@ import {
 const router = Router()
 
 router.get('/', (req, res) => {
-  const { tipo, operacion } = req.query
+  const { tipo, operacion, page, limit } = req.query
+
+  if (page || limit) {
+    const result = propertyRepo.findPaginated({
+      tipo,
+      operacion,
+      page: Number(page) || 1,
+      limit: Number(limit) || 9,
+    })
+    return res.json(result)
+  }
+
   const properties = propertyRepo.findAll({ tipo, operacion })
   res.json(properties)
 })

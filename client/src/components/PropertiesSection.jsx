@@ -1,23 +1,50 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import PropertyCard from './PropertyCard'
 import PropertyFilters from './PropertyFilters'
+import Pagination from './Pagination'
+import { usePaginatedProperties } from '../hooks/usePaginatedProperties'
 
-function filterProperties(properties, operacion, tipo) {
-  return properties.filter((property) => {
-    const matchOperacion =
-      operacion === 'Todos' || property.operacion === operacion
-    const matchTipo = tipo === 'Todos' || property.tipo === tipo
-    return matchOperacion && matchTipo
-  })
+function scrollToProperties() {
+  document.getElementById('propiedades')?.scrollIntoView({ behavior: 'smooth' })
 }
 
-export default function PropertiesSection({ properties, loading, error }) {
+export default function PropertiesSection() {
   const [operacion, setOperacion] = useState('Todos')
   const [tipo, setTipo] = useState('Todos')
+  const [page, setPage] = useState(1)
 
-  const filteredProperties = useMemo(
-    () => filterProperties(properties, operacion, tipo),
-    [properties, operacion, tipo],
+  const { properties, pagination, loading, error } = usePaginatedProperties({
+    page,
+    operacion,
+    tipo,
+  })
+
+  const handleOperacionChange = (value) => {
+    setOperacion(value)
+    setPage(1)
+  }
+
+  const handleTipoChange = (value) => {
+    setTipo(value)
+    setPage(1)
+  }
+
+  const handlePageChange = (nextPage) => {
+    setPage(nextPage)
+    scrollToProperties()
+  }
+
+  const handleClearFilters = () => {
+    setOperacion('Todos')
+    setTipo('Todos')
+    setPage(1)
+  }
+
+  const rangeStart =
+    pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1
+  const rangeEnd = Math.min(
+    pagination.page * pagination.limit,
+    pagination.total,
   )
 
   return (
@@ -32,6 +59,16 @@ export default function PropertiesSection({ properties, loading, error }) {
           </p>
         </div>
 
+        <PropertyFilters
+          operacion={operacion}
+          tipo={tipo}
+          onOperacionChange={handleOperacionChange}
+          onTipoChange={handleTipoChange}
+          resultCount={pagination.total}
+          rangeStart={rangeStart}
+          rangeEnd={rangeEnd}
+        />
+
         {loading && (
           <div className="flex justify-center py-12">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600" />
@@ -44,40 +81,35 @@ export default function PropertiesSection({ properties, loading, error }) {
           </div>
         )}
 
-        {!loading && !error && (
+        {!loading && !error && properties.length > 0 && (
           <>
-            <PropertyFilters
-              operacion={operacion}
-              tipo={tipo}
-              onOperacionChange={setOperacion}
-              onTipoChange={setTipo}
-              resultCount={filteredProperties.length}
-            />
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
 
-            {filteredProperties.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredProperties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
-                <p className="text-slate-600">
-                  No encontramos propiedades con esos filtros.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOperacion('Todos')
-                    setTipo('Todos')
-                  }}
-                  className="mt-4 text-sm font-medium text-primary-600 hover:underline"
-                >
-                  Limpiar filtros
-                </button>
-              </div>
-            )}
+            <Pagination
+              page={pagination.page}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+            />
           </>
+        )}
+
+        {!loading && !error && properties.length === 0 && (
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+            <p className="text-slate-600">
+              No encontramos propiedades con esos filtros.
+            </p>
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="mt-4 text-sm font-medium text-primary-600 hover:underline"
+            >
+              Limpiar filtros
+            </button>
+          </div>
         )}
       </div>
     </section>

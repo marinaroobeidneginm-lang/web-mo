@@ -45,6 +45,8 @@ export default function PropertyFilters({
   onOperacionChange,
   onTipoChange,
   resultCount,
+  rangeStart,
+  rangeEnd,
 }) {
   return (
     <div className="mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -65,7 +67,9 @@ export default function PropertyFilters({
       <p className="mt-4 text-sm text-slate-500">
         {resultCount === 0
           ? 'No hay propiedades con los filtros seleccionados'
-          : `${resultCount} propiedad${resultCount !== 1 ? 'es' : ''} encontrada${resultCount !== 1 ? 's' : ''}`}
+          : rangeStart && rangeEnd
+            ? `Mostrando ${rangeStart}-${rangeEnd} de ${resultCount} propiedad${resultCount !== 1 ? 'es' : ''}`
+            : `${resultCount} propiedad${resultCount !== 1 ? 'es' : ''} encontrada${resultCount !== 1 ? 's' : ''}`}
       </p>
     </div>
   )

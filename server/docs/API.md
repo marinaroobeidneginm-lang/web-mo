@@ -4,7 +4,8 @@
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/api/properties` | Listado (filtros: `?tipo=` `?operacion=`) |
+| GET | `/api/properties` | Listado completo (admin) |
+| GET | `/api/properties?page=1&limit=9` | Listado paginado (filtros: `?tipo=` `?operacion=`) |
 | GET | `/api/properties/:id` | Detalle |
 
 ## Escritura

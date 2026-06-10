@@ -16,6 +16,24 @@ export async function fetchProperties() {
   return handleResponse(response)
 }
 
+export async function fetchPaginatedProperties({
+  page = 1,
+  limit = 9,
+  tipo,
+  operacion,
+} = {}) {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  })
+
+  if (tipo && tipo !== 'Todos') params.set('tipo', tipo)
+  if (operacion && operacion !== 'Todos') params.set('operacion', operacion)
+
+  const response = await fetch(`/api/properties?${params}`)
+  return handleResponse(response)
+}
+
 export async function fetchProperty(id) {
   const response = await fetch(`/api/properties/${id}`)
   return handleResponse(response)
