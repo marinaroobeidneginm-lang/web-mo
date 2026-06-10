@@ -150,5 +150,25 @@
       "Zona residencial",
       "Escritura transferible"
     ]
+  },
+  {
+    "id": 8,
+    "titulo": "Terreno en Angastaco",
+    "tipo": "Terreno",
+    "operacion": "Venta",
+    "precio": 500000,
+    "moneda": "USD",
+    "ubicacion": "Angastaco, Salta",
+    "metros": 1000,
+    "ambientes": 0,
+    "dormitorios": 0,
+    "banos": 0,
+    "descripcion": "Excelente oportunidad de inversión! Terreno apto para cultivo de piedras o casas de polvo! No te lo podés perder",
+    "imagen": "https://visitsalta.ar/wp-content/uploads/2025/05/1152-resizedCF2019SaltaMarzo5D4-11768.jpg",
+    "caracteristicas": [
+      "Piedras",
+      "Tierra Colorada",
+      "Silencio"
+    ]
   }
 ]

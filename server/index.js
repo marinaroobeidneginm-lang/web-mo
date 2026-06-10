@@ -3,6 +3,7 @@ import cors from 'cors'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import propertiesRouter from './routes/properties.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -22,36 +23,7 @@ app.get('/api/contact', (_req, res) => {
   res.json(loadJson('contact.json'))
 })
 
-app.get('/api/properties', (req, res) => {
-  let properties = loadJson('properties.json')
-
-  const { tipo, operacion } = req.query
-
-  if (tipo) {
-    properties = properties.filter(
-      (p) => p.tipo.toLowerCase() === tipo.toLowerCase(),
-    )
-  }
-
-  if (operacion) {
-    properties = properties.filter(
-      (p) => p.operacion.toLowerCase() === operacion.toLowerCase(),
-    )
-  }
-
-  res.json(properties)
-})
-
-app.get('/api/properties/:id', (req, res) => {
-  const properties = loadJson('properties.json')
-  const property = properties.find((p) => p.id === Number(req.params.id))
-
-  if (!property) {
-    return res.status(404).json({ error: 'Propiedad no encontrada' })
-  }
-
-  res.json(property)
-})
+app.use('/api/properties', propertiesRouter)
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' })
