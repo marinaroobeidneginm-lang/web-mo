@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "titulo": "Departamento 3 ambientes en Barrio Norte",
+    "tipo": "Departamento",
+    "operacion": "Venta",
+    "precio": 185000,
+    "moneda": "USD",
+    "ubicacion": "Barrio Norte, Tucumán",
+    "ambientes": 3,
+    "metros": 78,
+    "dormitorios": 2,
+    "banos": 1,
+    "descripcion": "Luminoso departamento con balcón, cocina integrada y amenities en el edificio. Ubicado a pocas cuadras de la plaza principal, con excelente conectividad y servicios cercanos.",
+    "imagen": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "Balcón al frente",
+      "Cocina integrada",
+      "Amenities: pileta y gimnasio",
+      "Cochera opcional",
+      "Expensas moderadas"
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Casa con jardín en San Pablo",
+    "tipo": "Casa",
+    "operacion": "Venta",
+    "precio": 320000,
+    "moneda": "USD",
+    "ubicacion": "San Pablo, Tucumán",
+    "ambientes": 5,
+    "metros": 220,
+    "dormitorios": 4,
+    "banos": 3,
+    "descripcion": "Casa familiar con parque, quincho y cochera para dos vehículos. Barrio residencial tranquilo, ideal para familias que buscan espacio y privacidad.",
+    "imagen": "https://content.arquitecturaydiseno.es/medio/2025/06/10/112-dscf8690_43b1e88b_250610170038_1280x794.webp",
+    "caracteristicas": [
+      "Jardín con parrilla",
+      "Quincho cubierto",
+      "Cochera para 2 autos",
+      "Calefacción central",
+      "Seguridad perimetral"
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "Monoambiente en Barrio Norte",
+    "tipo": "Departamento",
+    "operacion": "Alquiler",
+    "precio": 450000,
+    "moneda": "ARS",
+    "ubicacion": "Barrio Norte, Tucumán",
+    "ambientes": 1,
+    "metros": 35,
+    "dormitorios": 0,
+    "banos": 1,
+    "descripcion": "Ideal para estudiantes o profesionales. A metros de la UTN y con transporte público a la puerta.",
+    "imagen": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "Amoblado",
+      "Internet incluido",
+      "Seguridad 24 hs",
+      "Luz y gas por separado"
+    ]
+  },
+  {
+    "id": 4,
+    "titulo": "PH 2 plantas en Lomas de Tafí",
+    "tipo": "PH",
+    "operacion": "Venta",
+    "precio": 145000,
+    "moneda": "USD",
+    "ubicacion": "Lomas de Tafí, Tucumán",
+    "ambientes": 4,
+    "metros": 120,
+    "dormitorios": 3,
+    "banos": 2,
+    "descripcion": "PH reciclado a nuevo con patio propio y terraza en la planta alta. Sin expensas y con escritura lista para transferir.",
+    "imagen": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "Patio propio",
+      "Terraza con vista",
+      "Reciclado a nuevo",
+      "Sin expensas",
+      "Escritura al día"
+    ]
+  },
+  {
+    "id": 5,
+    "titulo": "Local comercial en Microcentro",
+    "tipo": "Comercial",
+    "operacion": "Alquiler",
+    "precio": 2800,
+    "moneda": "USD",
+    "ubicacion": "San Miguel de Tucumán, Tucumán",
+    "ambientes": 2,
+    "metros": 95,
+    "dormitorios": 0,
+    "banos": 1,
+    "descripcion": "Excelente vidriera sobre calle peatonal. Ideal para oficinas, retail o servicios profesionales en zona de alto tránsito.",
+    "imagen": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "Vidriera al frente",
+      "Altura libre 3.5 m",
+      "Aire acondicionado",
+      "Baño y depósito",
+      "Contrato a 2 años"
+    ]
+  },
+  {
+    "id": 6,
+    "titulo": "Departamento 2 ambientes en Barrio Sur",
+    "tipo": "Departamento",
+    "operacion": "Alquiler",
+    "precio": 680000,
+    "moneda": "ARS",
+    "ubicacion": "Barrio Sur, Tucumán",
+    "ambientes": 2,
+    "metros": 52,
+    "dormitorios": 1,
+    "banos": 1,
+    "descripcion": "Departamento amplio con dependencia de servicio y baulera incluida. Edificio con portero y ascensor.",
+    "imagen": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "Dependencia de servicio",
+      "Baulera incluida",
+      "Ascensor",
+      "Portero eléctrico"
+    ]
+  },
+  {
+    "id": 7,
+    "titulo": "Terreno en Yerba Buena",
+    "tipo": "Terreno",
+    "operacion": "Venta",
+    "precio": 75000,
+    "moneda": "USD",
+    "ubicacion": "Yerba Buena, Tucumán",
+    "ambientes": 0,
+    "metros": 450,
+    "dormitorios": 0,
+    "banos": 0,
+    "descripcion": "Lote en zona residencial en crecimiento, apto para construcción de vivienda unifamiliar. Servicios de luz y agua en la vereda.",
+    "imagen": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&h=800&fit=crop",
+    "caracteristicas": [
+      "450 m² de superficie",
+      "Frente 15 m",
+      "Servicios en vereda",
+      "Zona residencial",
+      "Escritura transferible"
+    ]
+  }
+]
