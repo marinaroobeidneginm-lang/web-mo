@@ -1,21 +1,51 @@
+# API
+
+## Autenticación (JWT)
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| POST | `/api/auth/login` | No | Iniciar sesión |
+| GET | `/api/auth/me` | Sí | Usuario actual |
+
+### Login
+
+```bash
+curl -X POST http://localhost:3001/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@marinaroobeid.com","password":"admin123"}'
+```
+
+Respuesta:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "user": { "email": "admin@marinaroobeid.com" }
+}
+```
+
+En peticiones protegidas enviar: `Authorization: Bearer <token>`
+
+---
+
 # API de propiedades
 
 ## Lectura
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/api/properties` | Listado completo (admin) |
-| GET | `/api/properties?page=1&limit=9` | Listado paginado (filtros: `?tipo=` `?operacion=`) |
+| GET | `/api/properties` | Listado completo (**requiere JWT**, admin) |
+| GET | `/api/properties?page=1&limit=9` | Listado paginado público (filtros: `?tipo=` `?operacion=`) |
 | GET | `/api/properties/:id` | Detalle |
 
 ## Escritura
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| POST | `/api/properties` | Crear propiedad |
-| PUT | `/api/properties/:id` | Reemplazar propiedad completa |
-| PATCH | `/api/properties/:id` | Actualizar campos parciales |
-| DELETE | `/api/properties/:id` | Eliminar propiedad |
+| POST | `/api/properties` | Crear propiedad (**requiere JWT**) |
+| PUT | `/api/properties/:id` | Reemplazar propiedad completa (**requiere JWT**) |
+| PATCH | `/api/properties/:id` | Actualizar campos parciales (**requiere JWT**) |
+| DELETE | `/api/properties/:id` | Eliminar propiedad (**requiere JWT**) |
 
 ## Ejemplo: crear
 

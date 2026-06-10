@@ -1,19 +1,7 @@
-async function handleResponse(response) {
-  if (response.status === 204) return null
-
-  const data = await response.json()
-
-  if (!response.ok) {
-    const message = data.detalles?.join('. ') || data.error || 'Error en la petición'
-    throw new Error(message)
-  }
-
-  return data
-}
+import { apiRequest } from './apiClient'
 
 export async function fetchProperties() {
-  const response = await fetch('/api/properties')
-  return handleResponse(response)
+  return apiRequest('/api/properties')
 }
 
 export async function fetchPaginatedProperties({
@@ -30,36 +18,29 @@ export async function fetchPaginatedProperties({
   if (tipo && tipo !== 'Todos') params.set('tipo', tipo)
   if (operacion && operacion !== 'Todos') params.set('operacion', operacion)
 
-  const response = await fetch(`/api/properties?${params}`)
-  return handleResponse(response)
+  return apiRequest(`/api/properties?${params}`)
 }
 
 export async function fetchProperty(id) {
-  const response = await fetch(`/api/properties/${id}`)
-  return handleResponse(response)
+  return apiRequest(`/api/properties/${id}`)
 }
 
 export async function createProperty(payload) {
-  const response = await fetch('/api/properties', {
+  return apiRequest('/api/properties', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  return handleResponse(response)
 }
 
 export async function updateProperty(id, payload) {
-  const response = await fetch(`/api/properties/${id}`, {
+  return apiRequest(`/api/properties/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  return handleResponse(response)
 }
 
 export async function deleteProperty(id) {
-  const response = await fetch(`/api/properties/${id}`, {
+  return apiRequest(`/api/properties/${id}`, {
     method: 'DELETE',
   })
-  return handleResponse(response)
 }

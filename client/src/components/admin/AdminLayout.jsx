@@ -1,4 +1,5 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const navLinkClass = ({ isActive }) =>
   `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -8,6 +9,14 @@ const navLinkClass = ({ isActive }) =>
   }`
 
 export default function AdminLayout() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/admin/login')
+  }
+
   return (
     <div className="min-h-screen bg-slate-100">
       <header className="border-b border-slate-200 bg-white">
@@ -19,6 +28,9 @@ export default function AdminLayout() {
             <h1 className="text-lg font-bold text-slate-800">
               Marinaro Obeid Inmobiliaria
             </h1>
+            {user?.email && (
+              <p className="text-xs text-slate-500">{user.email}</p>
+            )}
           </div>
 
           <nav className="flex flex-wrap items-center gap-2">
@@ -34,6 +46,13 @@ export default function AdminLayout() {
             >
               Ver sitio público →
             </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
+            >
+              Cerrar sesión
+            </button>
           </nav>
         </div>
       </header>

@@ -1,8 +1,10 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import authRouter from './routes/auth.js'
 import propertiesRouter from './routes/properties.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -23,6 +25,7 @@ app.get('/api/contact', (_req, res) => {
   res.json(loadJson('contact.json'))
 })
 
+app.use('/api/auth', authRouter)
 app.use('/api/properties', propertiesRouter)
 
 app.get('/api/health', (_req, res) => {

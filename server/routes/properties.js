@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import * as propertyRepo from '../repositories/propertyRepository.js'
+import { requireAuth } from '../middleware/authMiddleware.js'
 import {
   normalizePropertyInput,
   validatePropertyInput,
@@ -7,7 +8,7 @@ import {
 
 const router = Router()
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   const { tipo, operacion, page, limit } = req.query
 
   if (page || limit) {
@@ -20,8 +21,10 @@ router.get('/', (req, res) => {
     return res.json(result)
   }
 
-  const properties = propertyRepo.findAll({ tipo, operacion })
-  res.json(properties)
+  next()
+}, requireAuth, (req, res) => {
+  const { tipo, operacion } = req.query
+  res.json(propertyRepo.findAll({ tipo, operacion }))
 })
 
 router.get('/:id', (req, res) => {
@@ -34,7 +37,7 @@ router.get('/:id', (req, res) => {
   res.json(property)
 })
 
-router.post('/', (req, res) => {
+router.post('/', requireAuth, (req, res) => {
   const errors = validatePropertyInput(req.body)
 
   if (errors.length > 0) {
@@ -45,7 +48,7 @@ router.post('/', (req, res) => {
   res.status(201).json(property)
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', requireAuth, (req, res) => {
   const existing = propertyRepo.findById(req.params.id)
 
   if (!existing) {
@@ -66,7 +69,7 @@ router.put('/:id', (req, res) => {
   res.json(property)
 })
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', requireAuth, (req, res) => {
   const existing = propertyRepo.findById(req.params.id)
 
   if (!existing) {
@@ -95,7 +98,7 @@ router.patch('/:id', (req, res) => {
   res.json(property)
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAuth, (req, res) => {
   const deleted = propertyRepo.remove(req.params.id)
 
   if (!deleted) {
