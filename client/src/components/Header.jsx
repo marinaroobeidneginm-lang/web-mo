@@ -18,8 +18,11 @@ export default function Header({ nombre }) {
             alt="Logo Marinaro Obeid"
             className="h-9 w-9 rounded-lg object-cover"
           />
-          <span className="text-lg font-semibold text-primary-700">
-            {nombre || 'Inmobiliaria'}
+          <span className="text-xl font-bold text-primary-700">
+            {"Marinaro Obeid"}
+          </span>
+          <span className="text-lg font-semibold text-primary-600">
+            {" | Negocios Inmobiliarios"}
           </span>
         </SectionLink>
 
