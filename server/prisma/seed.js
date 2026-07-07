@@ -30,6 +30,14 @@ async function main() {
     })
   }
 
+  // Tras insertar IDs explícitos, sincronizar la secuencia de autoincremento
+  await prisma.$executeRaw`
+    SELECT setval(
+      pg_get_serial_sequence('"Property"', 'id'),
+      COALESCE((SELECT MAX(id) FROM "Property"), 1)
+    )
+  `
+
   await prisma.contact.create({
     data: {
       id: 1,

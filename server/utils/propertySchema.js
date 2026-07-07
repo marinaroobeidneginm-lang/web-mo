@@ -57,17 +57,17 @@ export function validatePropertyInput(body, { partial = false } = {}) {
     errors.push(`El campo "moneda" debe ser uno de: ${MONEDAS_VALIDAS.join(', ')}`)
   }
 
-  if (body.precio !== undefined && (typeof body.precio !== 'number' || body.precio <= 0)) {
+  if (body.precio !== undefined && (!Number.isFinite(body.precio) || body.precio <= 0)) {
     errors.push('El campo "precio" debe ser un número mayor a 0')
   }
 
-  if (body.metros !== undefined && (typeof body.metros !== 'number' || body.metros <= 0)) {
+  if (body.metros !== undefined && (!Number.isFinite(body.metros) || body.metros <= 0)) {
     errors.push('El campo "metros" debe ser un número mayor a 0')
   }
 
   for (const campo of ['ambientes', 'dormitorios', 'banos']) {
     if (body[campo] !== undefined) {
-      if (typeof body[campo] !== 'number' || body[campo] < 0) {
+      if (!Number.isFinite(body[campo]) || body[campo] < 0) {
         errors.push(`El campo "${campo}" debe ser un número mayor o igual a 0`)
       }
     }

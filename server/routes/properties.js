@@ -60,8 +60,12 @@ router.post('/', requireAuth, async (req, res) => {
 
     const property = await propertyRepo.create(normalizePropertyInput(req.body))
     res.status(201).json(property)
-  } catch {
-    res.status(500).json({ error: 'Error al crear la propiedad' })
+  } catch (err) {
+    console.error('Error al crear propiedad:', err)
+    res.status(500).json({
+      error: 'Error al crear la propiedad',
+      detalle: err.message,
+    })
   }
 })
 
