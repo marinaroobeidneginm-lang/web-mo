@@ -1,8 +1,7 @@
 {
   "version": 2,
   "installCommand": "npm install --prefix client --include=dev && npm install --prefix server",
-  "buildCommand": "npm run build --prefix client && npm run db:generate --prefix server",
-  "outputDirectory": "client/dist",
+  "buildCommand": "npm run build:vercel && npm run db:generate --prefix server",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/" },
     { "source": "/(.*)", "destination": "/index.html" }
