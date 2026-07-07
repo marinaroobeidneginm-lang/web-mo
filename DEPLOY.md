@@ -100,9 +100,12 @@ npm run db:seed --prefix server
 | `NODE_ENV` | `production` |
 
 4. Deploy. Vercel usará `vercel.json` para:
-   - Compilar el frontend (`client/dist`)
+   - Compilar el frontend (`client/dist`) como sitio estático
+   - Ejecutar la API en `api/index.js` (solo rutas `/api/*`)
    - Generar Prisma Client (`prisma generate`)
-   - Servir API + sitio desde un solo dominio
+
+> **Framework en Vercel:** si el build falla con "No entrypoint found", andá a
+> Project Settings → General → Framework Preset → **Other** (no Express).
 
 > **Migraciones:** ya se aplicaron con `npm run db:deploy --prefix server` desde tu PC.
 > Si cambiás el schema, corré migraciones localmente **antes** de pushear a Vercel.

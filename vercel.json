@@ -1,13 +1,15 @@
 {
   "version": 2,
+  "framework": null,
   "installCommand": "npm install --prefix client --include=dev && npm install --prefix server",
-  "buildCommand": "npm run build:vercel && npm run db:generate --prefix server",
+  "buildCommand": "npm run build --prefix client && npm run db:generate --prefix server",
+  "outputDirectory": "client/dist",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/" },
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {
-    "server/app.js": {
+    "api/index.js": {
       "maxDuration": 30,
       "includeFiles": "server/node_modules/.prisma/**"
     }

@@ -43,9 +43,8 @@ app.get('/api/health', async (_req, res) => {
   }
 })
 
-// En Vercel el frontend se sirve desde public/ (CDN). Solo para npm start local:
-const isVercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV)
-if (process.env.NODE_ENV === 'production' && !isVercel) {
+// Solo para `npm start` local (sin Vercel)
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL && !process.env.VERCEL_ENV) {
   const clientDist = join(__dirname, '../client/dist')
   app.use(express.static(clientDist))
   app.get(/^(?!\/api).*/, (_req, res) => {
