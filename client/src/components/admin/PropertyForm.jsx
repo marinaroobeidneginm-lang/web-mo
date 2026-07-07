@@ -6,6 +6,7 @@ import {
   TIPOS,
 } from '../../constants/propertyOptions'
 import { formToPayload } from '../../utils/propertyForm'
+import { uploadPropertyImage } from '../../services/uploadApi'
 
 function Field({ label, children, hint, className = '' }) {
   return (
@@ -31,12 +32,35 @@ export default function PropertyForm({
   const [form, setForm] = useState(initialForm)
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [useExternalUrl, setUseExternalUrl] = useState(
+    Boolean(initialForm.imagen && !initialForm.imagen.includes('supabase.co/storage')),
+  )
 
   const esTerreno = form.tipo === 'Terreno'
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setError(null)
+    setUploading(true)
+
+    try {
+      const url = await uploadPropertyImage(file)
+      setForm((prev) => ({ ...prev, imagen: url }))
+      setUseExternalUrl(false)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploading(false)
+      event.target.value = ''
+    }
   }
 
   const handleSubmit = async (event) => {
@@ -46,6 +70,9 @@ export default function PropertyForm({
 
     try {
       const payload = formToPayload(form)
+      if (!payload.imagen) {
+        throw new Error('Subí una imagen o pegá una URL externa')
+      }
       await onSubmit(payload)
     } catch (err) {
       setError(err.message)
@@ -119,16 +146,43 @@ export default function PropertyForm({
             />
           </Field>
 
-          <Field label="URL de imagen *">
-            <input
-              name="imagen"
-              type="url"
-              value={form.imagen}
-              onChange={handleChange}
-              required
-              className={inputClass}
-              placeholder="https://..."
-            />
+          <Field
+            label="Imagen *"
+            hint="JPG, PNG o WebP — máximo 5 MB"
+            className="sm:col-span-2"
+          >
+            <div className="space-y-3">
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                disabled={uploading || saving}
+                className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-primary-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary-700 hover:file:bg-primary-100 disabled:opacity-60"
+              />
+              {uploading && (
+                <p className="text-sm text-primary-600">Subiendo imagen...</p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setUseExternalUrl((prev) => !prev)}
+                className="text-sm text-slate-500 underline-offset-2 hover:text-primary-600 hover:underline"
+              >
+                {useExternalUrl ? 'Ocultar URL externa' : 'Usar URL externa en su lugar'}
+              </button>
+
+              {useExternalUrl && (
+                <input
+                  name="imagen"
+                  type="url"
+                  value={form.imagen}
+                  onChange={handleChange}
+                  required={!form.imagen}
+                  className={inputClass}
+                  placeholder="https://..."
+                />
+              )}
+            </div>
           </Field>
         </div>
 

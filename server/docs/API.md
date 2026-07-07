@@ -28,6 +28,27 @@ En peticiones protegidas enviar: `Authorization: Bearer <token>`
 
 ---
 
+## Subida de imágenes (Storage)
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| POST | `/api/uploads/image` | Sí | Subir imagen a Supabase Storage |
+
+Body: `multipart/form-data` con campo `image` (JPG, PNG o WebP, máx. 5 MB).
+
+Respuesta:
+
+```json
+{
+  "url": "https://xxx.supabase.co/storage/v1/object/public/propiedades/1234-uuid.jpg",
+  "path": "1234-uuid.jpg"
+}
+```
+
+Usá la `url` en el campo `imagen` al crear o editar una propiedad.
+
+---
+
 # API de propiedades
 
 ## Lectura

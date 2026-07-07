@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import authRouter from './routes/auth.js'
 import propertiesRouter from './routes/properties.js'
+import uploadsRouter from './routes/uploads.js'
 import { getContact } from './repositories/contactRepository.js'
 import prisma from './lib/prisma.js'
 
@@ -31,6 +32,7 @@ app.get('/api/contact', async (_req, res) => {
 
 app.use('/api/auth', authRouter)
 app.use('/api/properties', propertiesRouter)
+app.use('/api/uploads', uploadsRouter)
 
 app.get('/api/health', async (_req, res) => {
   try {

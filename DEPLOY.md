@@ -11,7 +11,38 @@ En [Supabase Dashboard](https://supabase.com/dashboard) → tu proyecto → **Se
 postgresql://postgres:TU_CONTRASEÑA@db.qwxnscormzschyukuksj.supabase.co:5432/postgres
 ```
 
-## 2. Migrar y cargar datos (una sola vez, en tu PC)
+## 2. Connection string (IMPORTANTE en Windows)
+
+**No uses** `db.xxx.supabase.co:5432` (conexión directa). En muchas redes de Windows solo tiene IPv6 y falla con `P1001`.
+
+1. Entrá a tu proyecto en Supabase.
+2. Click **Connect** (arriba).
+3. Elegí **Session pooler** (puerto **5432**).
+4. Copiá el string completo. Debe verse así:
+
+```
+postgresql://postgres.qwxnscormzschyukuksj:[PASSWORD]@aws-X-REGION.pooler.supabase.com:5432/postgres
+```
+
+Notas:
+- El usuario es `postgres.qwxnscormzschyukuksj` (con el project ref), **no** solo `postgres`.
+- El host puede ser `aws-1-...` (no siempre `aws-0-...`). Copialo del dashboard.
+- Si la contraseña tiene `$`, `?`, `&` → codificala en [urlencoder.org](https://www.urlencoder.org/).
+
+Pegá el mismo string en `server/.env`:
+
+```env
+DATABASE_URL="..."
+DIRECT_URL="..."
+```
+
+Probá la conexión:
+
+```bash
+npm run db:test --prefix server
+```
+
+## 3. Migrar y cargar datos
 
 Editá `server/.env` con tu contraseña real:
 
@@ -32,6 +63,22 @@ npm run db:deploy --prefix server
 npm run db:seed --prefix server
 ```
 
+## Alternativa: crear tablas desde Supabase SQL Editor
+
+Si la conexión desde tu PC sigue fallando, podés crear las tablas manualmente:
+
+1. Supabase Dashboard → **SQL Editor** → New query
+2. Pegá el contenido de `server/prisma/migrations/20260706180000_init_postgres/migration.sql`
+3. Run
+
+Luego, cuando tengas el pooler string correcto, ejecutá solo el seed:
+
+```bash
+npm run db:seed --prefix server
+```
+
+---
+
 ## 3. Deploy en Vercel
 
 1. Subí el repo a GitHub (si aún no está).
@@ -46,6 +93,9 @@ npm run db:seed --prefix server
 | `JWT_EXPIRES_IN` | `8h` |
 | `ADMIN_EMAIL` | Email del admin |
 | `ADMIN_PASSWORD_HASH` | Hash bcrypt de tu contraseña |
+| `SUPABASE_URL` | URL del proyecto (Settings → API) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Clave **service_role** (secret, solo backend) |
+| `SUPABASE_STORAGE_BUCKET` | `propiedades` |
 | `NODE_ENV` | `production` |
 
 4. Deploy. Vercel usará `vercel.json` para:
@@ -59,13 +109,40 @@ npm run db:seed --prefix server
 - API: `https://tu-proyecto.vercel.app/api/health` → debe mostrar `"database": "connected"`
 - Admin: `https://tu-proyecto.vercel.app/admin/login`
 
-## 5. Imágenes en Supabase Storage (próximo paso)
+## 5. Imágenes en Supabase Storage
 
-Hoy las propiedades usan URLs en el campo `imagen`. Para subir fotos a Supabase Storage:
+El panel admin permite **subir fotos** directamente. Las imágenes se guardan en Supabase Storage y la URL pública queda en el campo `imagen` de cada propiedad.
 
-1. En Supabase → **Storage** → crear bucket `propiedades` (público).
-2. Subí las imágenes y copiá la URL pública.
-3. Pegala en el panel admin al crear/editar propiedades.
+### Configurar Storage
+
+1. Supabase Dashboard → **Project Settings → API**
+   - Copiá **Project URL** → `SUPABASE_URL`
+   - Copiá **service_role** (secret) → `SUPABASE_SERVICE_ROLE_KEY`  
+     ⚠️ Nunca expongas esta clave en el frontend ni la subas a git.
+
+2. Crear el bucket (automático):
+
+```bash
+npm run storage:setup --prefix server
+```
+
+O manualmente: **Storage → New bucket** → nombre `propiedades`, marcar **Public bucket**.
+
+3. Agregá las variables en `server/.env` local y en **Vercel → Environment Variables**:
+
+| Variable | Valor |
+|----------|--------|
+| `SUPABASE_URL` | `https://xxx.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Clave service_role del dashboard |
+| `SUPABASE_STORAGE_BUCKET` | `propiedades` (opcional, este es el default) |
+
+### Uso en el admin
+
+1. Entrá a `/admin` → crear o editar propiedad.
+2. Elegí **Subir imagen** (JPG/PNG/WebP, máx. 5 MB).
+3. También podés usar **URL externa** si la foto ya está en otro servidor.
+
+La API de subida es `POST /api/uploads/image` (requiere JWT). Solo el backend usa la service role key.
 
 ---
 
