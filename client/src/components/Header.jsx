@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import logo from '../assets/logo_mo_neg_onm.jpg'
+import logo from '../assets/logo_mo_recortado.jpg'
 import SectionLink from './SectionLink'
 
 export default function Header({ nombre }) {

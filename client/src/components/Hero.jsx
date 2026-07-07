@@ -1,4 +1,4 @@
-import ginoPhoto from '../assets/gino_fondobiblioteca.png'
+import ginoPhoto from '../assets/gino_facha.jpg'
 
 export default function Hero({ nombre }) {
   return (
