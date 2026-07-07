@@ -4,12 +4,7 @@
   "buildCommand": "npm run build --prefix client && npm run db:generate --prefix server && npm run db:deploy --prefix server",
   "outputDirectory": "client/dist",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
-    { "source": "/(.*)", "destination": "/api" }
-  ],
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
-    }
-  }
+    { "source": "/api/(.*)", "destination": "/" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

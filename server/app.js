@@ -44,8 +44,10 @@ app.get('/api/health', async (_req, res) => {
 })
 
 const clientDist = join(__dirname, '../client/dist')
+const isVercel = Boolean(process.env.VERCEL)
 
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+// En Vercel los estáticos los sirve outputDirectory (CDN); express.static se ignora.
+if (!isVercel && process.env.NODE_ENV === 'production') {
   app.use(express.static(clientDist))
 
   app.get(/^(?!\/api).*/, (_req, res) => {

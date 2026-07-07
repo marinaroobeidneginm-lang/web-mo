@@ -2,6 +2,8 @@
   "name": "marinaro-obeid-negocios-inmobiliarios",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "main": "server/app.js",
   "description": "Web de inmobiliaria Marinaro Obeid",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",

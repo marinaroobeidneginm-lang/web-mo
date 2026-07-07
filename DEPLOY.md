@@ -83,7 +83,8 @@ npm run db:seed --prefix server
 
 1. Subí el repo a GitHub (si aún no está).
 2. En [vercel.com](https://vercel.com) → **Add New Project** → importá el repositorio.
-3. En **Environment Variables**, agregá:
+3. Vercel detecta Express vía `package.json` → `"main": "server/app.js"`.
+4. En **Environment Variables**, agregá:
 
 | Variable | Valor |
 |----------|--------|
