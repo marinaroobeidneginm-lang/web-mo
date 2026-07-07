@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import { existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import authRouter from './routes/auth.js'
@@ -44,33 +43,14 @@ app.get('/api/health', async (_req, res) => {
   }
 })
 
-const clientDistCandidates = [
-  join(__dirname, 'public'),
-  join(process.cwd(), 'server/public'),
-  join(process.cwd(), 'client/dist'),
-  join(__dirname, '../client/dist'),
-]
-
-const clientDist =
-  clientDistCandidates.find((dir) => existsSync(join(dir, 'index.html'))) ??
-  clientDistCandidates[0]
-
-function sendDistFile(relativePath, res, next) {
-  const filePath = join(clientDist, relativePath)
-  if (!existsSync(filePath)) {
-    next()
-    return
-  }
-  res.sendFile(filePath)
+// En Vercel el frontend se sirve desde public/ (CDN). Solo para npm start local:
+const isVercel = Boolean(process.env.VERCEL || process.env.VERCEL_ENV)
+if (process.env.NODE_ENV === 'production' && !isVercel) {
+  const clientDist = join(__dirname, '../client/dist')
+  app.use(express.static(clientDist))
+  app.get(/^(?!\/api).*/, (_req, res) => {
+    res.sendFile(join(clientDist, 'index.html'))
+  })
 }
-
-// Siempre registrar rutas del frontend (Vercel no setea VERCEL/NODE_ENV de forma confiable).
-app.get(/^\/assets\/.+/, (req, res, next) => {
-  sendDistFile(req.path.slice(1), res, next)
-})
-
-app.get(/^(?!\/api).*/, (_req, res, next) => {
-  sendDistFile('index.html', res, next)
-})
 
 export default app
