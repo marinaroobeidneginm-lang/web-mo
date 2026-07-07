@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { deleteProperty, fetchProperties } from '../../services/propertyApi'
 import { formatPrice } from '../../utils/formatPrice'
+import { getPrimaryImage } from '../../utils/propertyImages'
 
 export default function AdminPropertyList() {
   const location = useLocation()
@@ -106,7 +107,7 @@ export default function AdminPropertyList() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <img
-                        src={property.imagen}
+                        src={getPrimaryImage(property)}
                         alt=""
                         className="h-12 w-16 rounded object-cover"
                       />

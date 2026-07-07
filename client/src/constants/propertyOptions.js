@@ -2,6 +2,8 @@ export const TIPOS = ['Departamento', 'Casa', 'PH', 'Terreno', 'Comercial']
 export const OPERACIONES = ['Venta', 'Alquiler']
 export const MONEDAS = ['USD', 'ARS']
 
+export const MAX_PROPERTY_IMAGES = 10
+
 export const EMPTY_PROPERTY_FORM = {
   titulo: '',
   tipo: 'Departamento',
@@ -14,6 +16,7 @@ export const EMPTY_PROPERTY_FORM = {
   dormitorios: '1',
   banos: '1',
   descripcion: '',
-  imagen: '',
+  imagenes: [],
+  externalImageUrl: '',
   caracteristicas: '',
 }

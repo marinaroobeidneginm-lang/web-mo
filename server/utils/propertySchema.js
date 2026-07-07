@@ -19,7 +19,7 @@ const CAMPOS_REQUERIDOS = [
   'ubicacion',
   'metros',
   'descripcion',
-  'imagen',
+  'imagenes',
 ]
 
 export function validatePropertyInput(body, { partial = false } = {}) {
@@ -81,6 +81,18 @@ export function validatePropertyInput(body, { partial = false } = {}) {
     }
   }
 
+  if (body.imagenes !== undefined) {
+    if (!Array.isArray(body.imagenes)) {
+      errors.push('El campo "imagenes" debe ser un array de URLs')
+    } else if (body.imagenes.length === 0) {
+      errors.push('Debe haber al menos una imagen')
+    } else if (body.imagenes.some((item) => typeof item !== 'string' || !item.trim())) {
+      errors.push('Cada imagen debe ser una URL válida')
+    } else if (body.imagenes.length > 10) {
+      errors.push('Máximo 10 imágenes por propiedad')
+    }
+  }
+
   if (partial && campos.length === 0) {
     errors.push('Debés enviar al menos un campo para actualizar')
   }
@@ -104,7 +116,9 @@ export function normalizePropertyInput(body) {
     dormitorios: body.dormitorios ?? (esTerreno ? 0 : 0),
     banos: body.banos ?? (esTerreno ? 0 : 1),
     descripcion: body.descripcion?.trim(),
-    imagen: body.imagen?.trim(),
+    imagenes: Array.isArray(body.imagenes)
+      ? body.imagenes.map((item) => item.trim()).filter(Boolean)
+      : [],
     caracteristicas: Array.isArray(body.caracteristicas)
       ? body.caracteristicas.map((item) => item.trim()).filter(Boolean)
       : [],

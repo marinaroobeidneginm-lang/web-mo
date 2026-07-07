@@ -45,7 +45,7 @@ Respuesta:
 }
 ```
 
-Usá la `url` en el campo `imagen` al crear o editar una propiedad.
+Usá la `url` en el array `imagenes` al crear o editar una propiedad (mínimo 1, máximo 10).
 
 ---
 
@@ -85,7 +85,10 @@ curl -X POST http://localhost:3001/api/properties \
     "dormitorios": 1,
     "banos": 1,
     "descripcion": "Departamento luminoso con balcón.",
-    "imagen": "https://ejemplo.com/foto.jpg",
+    "imagenes": [
+      "https://ejemplo.com/foto-1.jpg",
+      "https://ejemplo.com/foto-2.jpg"
+    ],
     "caracteristicas": ["Balcón", "Cochera"]
   }'
 ```
@@ -100,7 +103,7 @@ curl -X PATCH http://localhost:3001/api/properties/1 \
 
 ## Campos obligatorios (POST y PUT)
 
-`titulo`, `tipo`, `operacion`, `precio`, `moneda`, `ubicacion`, `metros`, `descripcion`, `imagen`
+`titulo`, `tipo`, `operacion`, `precio`, `moneda`, `ubicacion`, `metros`, `descripcion`, `imagenes` (array de URLs, 1–10)
 
 Opcionales: `ambientes`, `dormitorios`, `banos`, `caracteristicas`
 

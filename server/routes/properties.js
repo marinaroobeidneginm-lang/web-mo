@@ -113,7 +113,9 @@ router.patch('/:id', requireAuth, async (req, res) => {
     if (req.body.titulo !== undefined) merged.titulo = req.body.titulo.trim()
     if (req.body.ubicacion !== undefined) merged.ubicacion = req.body.ubicacion.trim()
     if (req.body.descripcion !== undefined) merged.descripcion = req.body.descripcion.trim()
-    if (req.body.imagen !== undefined) merged.imagen = req.body.imagen.trim()
+    if (req.body.imagenes !== undefined) {
+      merged.imagenes = req.body.imagenes.map((item) => item.trim()).filter(Boolean)
+    }
     if (req.body.caracteristicas !== undefined) {
       merged.caracteristicas = req.body.caracteristicas
         .map((item) => item.trim())

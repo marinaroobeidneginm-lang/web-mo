@@ -27,10 +27,16 @@ function buildWhere({ tipo, operacion } = {}) {
   return where
 }
 
+function normalizeImagenes(value) {
+  if (!Array.isArray(value)) return []
+  return value.map((item) => String(item).trim()).filter(Boolean)
+}
+
 function prepareData(data) {
-  const { caracteristicas, ...rest } = data
+  const { caracteristicas, imagenes, ...rest } = data
   return {
     ...rest,
+    imagenes: normalizeImagenes(imagenes),
     caracteristicas: normalizeCaracteristicas(caracteristicas),
   }
 }

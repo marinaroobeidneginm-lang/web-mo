@@ -20,11 +20,14 @@ async function main() {
   await prisma.contact.deleteMany()
 
   for (const property of properties) {
-    const { id, caracteristicas, ...data } = property
+    const { id, caracteristicas, imagen, imagenes, ...data } = property
+    const imageList = imagenes ?? (imagen ? [imagen] : [])
+
     await prisma.property.create({
       data: {
         id,
         ...data,
+        imagenes: imageList,
         caracteristicas: caracteristicas ?? [],
       },
     })

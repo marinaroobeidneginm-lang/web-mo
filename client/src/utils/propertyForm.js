@@ -1,4 +1,5 @@
 import { EMPTY_PROPERTY_FORM } from '../constants/propertyOptions'
+import { getPropertyImages } from './propertyImages'
 
 export function propertyToForm(property) {
   if (!property) return { ...EMPTY_PROPERTY_FORM }
@@ -15,7 +16,8 @@ export function propertyToForm(property) {
     dormitorios: String(property.dormitorios ?? 0),
     banos: String(property.banos ?? 0),
     descripcion: property.descripcion ?? '',
-    imagen: property.imagen ?? '',
+    imagenes: getPropertyImages(property),
+    externalImageUrl: '',
     caracteristicas: (property.caracteristicas ?? []).join('\n'),
   }
 }
@@ -35,7 +37,7 @@ export function formToPayload(form) {
     dormitorios: esTerreno ? 0 : Number(form.dormitorios || 0),
     banos: esTerreno ? 0 : Number(form.banos || 0),
     descripcion: form.descripcion.trim(),
-    imagen: form.imagen.trim(),
+    imagenes: form.imagenes,
     caracteristicas: form.caracteristicas
       .split('\n')
       .map((line) => line.trim())

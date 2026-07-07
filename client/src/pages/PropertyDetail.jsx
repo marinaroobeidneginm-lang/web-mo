@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Layout from '../components/Layout'
 import SectionLink from '../components/SectionLink'
 import { useProperty } from '../hooks/useProperty'
 import { useContact } from '../hooks/useContact'
 import { formatPrice } from '../utils/formatPrice'
+import { getPropertyImages } from '../utils/propertyImages'
 
 function DetailItem({ label, value }) {
   if (value === undefined || value === null || value === '') return null
@@ -22,6 +24,14 @@ export default function PropertyDetail() {
   const { id } = useParams()
   const { property, loading, error } = useProperty(id)
   const { contact } = useContact()
+  const [activeImage, setActiveImage] = useState(0)
+
+  const images = getPropertyImages(property)
+  const currentImage = images[activeImage] ?? images[0] ?? ''
+
+  useEffect(() => {
+    setActiveImage(0)
+  }, [property?.id])
 
   const whatsappUrl = contact?.whatsapp
     ? `https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
@@ -65,10 +75,15 @@ export default function PropertyDetail() {
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
               <div className="relative aspect-[16/7] overflow-hidden sm:aspect-[21/9]">
                 <img
-                  src={property.imagen}
+                  src={currentImage}
                   alt={property.titulo}
                   className="h-full w-full object-cover"
                 />
+                {images.length > 1 && (
+                  <span className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
+                    {activeImage + 1} / {images.length}
+                  </span>
+                )}
                 <div className="absolute left-4 top-4 flex gap-2">
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -84,6 +99,29 @@ export default function PropertyDetail() {
                   </span>
                 </div>
               </div>
+
+              {images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto border-t border-slate-100 bg-slate-50 p-3">
+                  {images.map((url, index) => (
+                    <button
+                      key={`${url}-${index}`}
+                      type="button"
+                      onClick={() => setActiveImage(index)}
+                      className={`shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
+                        index === activeImage
+                          ? 'border-primary-600'
+                          : 'border-transparent opacity-80 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={url}
+                        alt={`${property.titulo} ${index + 1}`}
+                        className="h-16 w-24 object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
 
               <div className="p-6 sm:p-8">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

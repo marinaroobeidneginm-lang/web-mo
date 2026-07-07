@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
+  MAX_PROPERTY_IMAGES,
   MONEDAS,
   OPERACIONES,
   TIPOS,
@@ -33,11 +34,9 @@ export default function PropertyForm({
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [useExternalUrl, setUseExternalUrl] = useState(
-    Boolean(initialForm.imagen && !initialForm.imagen.includes('supabase.co/storage')),
-  )
 
   const esTerreno = form.tipo === 'Terreno'
+  const canAddMore = form.imagenes.length < MAX_PROPERTY_IMAGES
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -45,22 +44,58 @@ export default function PropertyForm({
   }
 
   const handleImageUpload = async (event) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const files = Array.from(event.target.files ?? [])
+    if (files.length === 0) return
 
+    const available = MAX_PROPERTY_IMAGES - form.imagenes.length
+    if (available <= 0) {
+      setError(`Máximo ${MAX_PROPERTY_IMAGES} imágenes por propiedad`)
+      return
+    }
+
+    const toUpload = files.slice(0, available)
     setError(null)
     setUploading(true)
 
     try {
-      const url = await uploadPropertyImage(file)
-      setForm((prev) => ({ ...prev, imagen: url }))
-      setUseExternalUrl(false)
+      const urls = []
+      for (const file of toUpload) {
+        urls.push(await uploadPropertyImage(file))
+      }
+      setForm((prev) => ({
+        ...prev,
+        imagenes: [...prev.imagenes, ...urls],
+      }))
     } catch (err) {
       setError(err.message)
     } finally {
       setUploading(false)
       event.target.value = ''
     }
+  }
+
+  const handleAddExternalUrl = () => {
+    const url = form.externalImageUrl.trim()
+    if (!url) return
+
+    if (!canAddMore) {
+      setError(`Máximo ${MAX_PROPERTY_IMAGES} imágenes por propiedad`)
+      return
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      imagenes: [...prev.imagenes, url],
+      externalImageUrl: '',
+    }))
+    setError(null)
+  }
+
+  const handleRemoveImage = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      imagenes: prev.imagenes.filter((_, i) => i !== index),
+    }))
   }
 
   const handleSubmit = async (event) => {
@@ -70,8 +105,8 @@ export default function PropertyForm({
 
     try {
       const payload = formToPayload(form)
-      if (!payload.imagen) {
-        throw new Error('Subí una imagen o pegá una URL externa')
+      if (payload.imagenes.length === 0) {
+        throw new Error('Agregá al menos una imagen')
       }
       await onSubmit(payload)
     } catch (err) {
@@ -147,55 +182,73 @@ export default function PropertyForm({
           </Field>
 
           <Field
-            label="Imagen *"
-            hint="JPG, PNG o WebP — máximo 5 MB"
+            label={`Imágenes * (${form.imagenes.length}/${MAX_PROPERTY_IMAGES})`}
+            hint="JPG, PNG o WebP — máximo 5 MB cada una. La primera es la portada."
             className="sm:col-span-2"
           >
             <div className="space-y-3">
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
+                multiple
                 onChange={handleImageUpload}
-                disabled={uploading || saving}
+                disabled={uploading || saving || !canAddMore}
                 className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-primary-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary-700 hover:file:bg-primary-100 disabled:opacity-60"
               />
               {uploading && (
-                <p className="text-sm text-primary-600">Subiendo imagen...</p>
+                <p className="text-sm text-primary-600">Subiendo imágenes...</p>
               )}
 
-              <button
-                type="button"
-                onClick={() => setUseExternalUrl((prev) => !prev)}
-                className="text-sm text-slate-500 underline-offset-2 hover:text-primary-600 hover:underline"
-              >
-                {useExternalUrl ? 'Ocultar URL externa' : 'Usar URL externa en su lugar'}
-              </button>
-
-              {useExternalUrl && (
+              <div className="flex gap-2">
                 <input
-                  name="imagen"
+                  name="externalImageUrl"
                   type="url"
-                  value={form.imagen}
+                  value={form.externalImageUrl}
                   onChange={handleChange}
-                  required={!form.imagen}
+                  disabled={!canAddMore}
                   className={inputClass}
-                  placeholder="https://..."
+                  placeholder="https://... (URL externa)"
                 />
-              )}
+                <button
+                  type="button"
+                  onClick={handleAddExternalUrl}
+                  disabled={!canAddMore || !form.externalImageUrl.trim()}
+                  className="shrink-0 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
+                >
+                  Agregar
+                </button>
+              </div>
             </div>
           </Field>
         </div>
 
-        {form.imagen && (
-          <div className="mt-4 overflow-hidden rounded-lg border border-slate-200">
-            <img
-              src={form.imagen}
-              alt="Vista previa"
-              className="aspect-video w-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none'
-              }}
-            />
+        {form.imagenes.length > 0 && (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {form.imagenes.map((url, index) => (
+              <div
+                key={`${url}-${index}`}
+                className="relative overflow-hidden rounded-lg border border-slate-200"
+              >
+                <img
+                  src={url}
+                  alt={`Vista previa ${index + 1}`}
+                  className="aspect-video w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+                <div className="absolute left-2 top-2 rounded bg-black/60 px-2 py-0.5 text-xs text-white">
+                  {index === 0 ? 'Portada' : index + 1}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute right-2 top-2 rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700"
+                >
+                  Quitar
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </section>

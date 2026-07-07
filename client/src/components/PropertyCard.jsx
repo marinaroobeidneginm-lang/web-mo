@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../utils/formatPrice'
+import { getPrimaryImage } from '../utils/propertyImages'
 
 export default function PropertyCard({ property }) {
   const isVenta = property.operacion === 'Venta'
+  const cover = getPrimaryImage(property)
 
   return (
     <article className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <Link to={`/propiedades/${property.id}`} className="block no-underline">
         <div className="relative aspect-[3/2] overflow-hidden">
           <img
-            src={property.imagen}
+            src={cover}
             alt={property.titulo}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
