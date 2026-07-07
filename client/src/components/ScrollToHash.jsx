@@ -1,19 +1,28 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { scrollToSectionWhenReady } from '../utils/scrollToSection'
 
 export default function ScrollToHash() {
-  const { pathname, hash } = useLocation()
+  const location = useLocation()
+  const { pathname, hash, state } = location
 
   useEffect(() => {
-    if (pathname !== '/' || !hash) return
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+  }, [])
 
-    const sectionId = hash.slice(1)
-    const timer = window.setTimeout(() => {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
-    }, 0)
+  useEffect(() => {
+    if (pathname !== '/') return undefined
 
-    return () => window.clearTimeout(timer)
-  }, [pathname, hash])
+    const sectionId = state?.scrollTo || (hash ? hash.slice(1) : null)
+    if (!sectionId) return undefined
+
+    return scrollToSectionWhenReady(sectionId, {
+      duration: 5000,
+      interval: 100,
+    })
+  }, [pathname, hash, state?.scrollTo])
 
   return null
 }
