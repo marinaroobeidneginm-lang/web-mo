@@ -10,7 +10,6 @@
     "dev:client": "npm run dev --prefix client",
     "dev:server": "npm run dev --prefix server",
     "build": "npm run build --prefix client",
-    "build:vercel": "npm run build --prefix client && node scripts/copy-dist-to-public.js",
     "start": "npm run start --prefix server",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",

@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import { existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import authRouter from './routes/auth.js'
@@ -43,11 +44,31 @@ app.get('/api/health', async (_req, res) => {
   }
 })
 
-const clientDist = join(__dirname, '../client/dist')
+const clientDist = [join(process.cwd(), 'client/dist'), join(__dirname, '../client/dist')].find(
+  (dir) => existsSync(join(dir, 'index.html')),
+) ?? join(__dirname, '../client/dist')
+
 const isVercel = Boolean(process.env.VERCEL)
 
-// En Vercel los estáticos los sirve outputDirectory (CDN); express.static se ignora.
-if (!isVercel && process.env.NODE_ENV === 'production') {
+function sendDistFile(relativePath, res) {
+  const filePath = join(clientDist, relativePath)
+  if (!existsSync(filePath)) {
+    res.status(404).end()
+    return
+  }
+  res.sendFile(filePath)
+}
+
+// En Vercel express.static no sirve archivos; hay que enviarlos manualmente.
+if (isVercel) {
+  app.get(/^\/assets\/.+/, (req, res) => {
+    sendDistFile(req.path.slice(1), res)
+  })
+
+  app.get(/^(?!\/api).*/, (_req, res) => {
+    sendDistFile('index.html', res)
+  })
+} else if (process.env.NODE_ENV === 'production') {
   app.use(express.static(clientDist))
 
   app.get(/^(?!\/api).*/, (_req, res) => {
