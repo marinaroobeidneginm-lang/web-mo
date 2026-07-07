@@ -101,8 +101,12 @@ npm run db:seed --prefix server
 
 4. Deploy. Vercel usará `vercel.json` para:
    - Compilar el frontend (`client/dist`)
-   - Ejecutar migraciones (`prisma migrate deploy`)
+   - Generar Prisma Client (`prisma generate`)
    - Servir API + sitio desde un solo dominio
+
+> **Migraciones:** ya se aplicaron con `npm run db:deploy --prefix server` desde tu PC.
+> Si cambiás el schema, corré migraciones localmente **antes** de pushear a Vercel.
+> No se ejecutan en el build de Vercel (evita fallos de conexión en CI).
 
 ## 4. Verificar
 
