@@ -44,36 +44,33 @@ app.get('/api/health', async (_req, res) => {
   }
 })
 
-const clientDist = [join(process.cwd(), 'client/dist'), join(__dirname, '../client/dist')].find(
-  (dir) => existsSync(join(dir, 'index.html')),
-) ?? join(__dirname, '../client/dist')
+const clientDistCandidates = [
+  join(__dirname, 'public'),
+  join(process.cwd(), 'server/public'),
+  join(process.cwd(), 'client/dist'),
+  join(__dirname, '../client/dist'),
+]
 
-const isVercel = Boolean(process.env.VERCEL)
+const clientDist =
+  clientDistCandidates.find((dir) => existsSync(join(dir, 'index.html'))) ??
+  clientDistCandidates[0]
 
-function sendDistFile(relativePath, res) {
+function sendDistFile(relativePath, res, next) {
   const filePath = join(clientDist, relativePath)
   if (!existsSync(filePath)) {
-    res.status(404).end()
+    next()
     return
   }
   res.sendFile(filePath)
 }
 
-// En Vercel express.static no sirve archivos; hay que enviarlos manualmente.
-if (isVercel) {
-  app.get(/^\/assets\/.+/, (req, res) => {
-    sendDistFile(req.path.slice(1), res)
-  })
+// Siempre registrar rutas del frontend (Vercel no setea VERCEL/NODE_ENV de forma confiable).
+app.get(/^\/assets\/.+/, (req, res, next) => {
+  sendDistFile(req.path.slice(1), res, next)
+})
 
-  app.get(/^(?!\/api).*/, (_req, res) => {
-    sendDistFile('index.html', res)
-  })
-} else if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(clientDist))
-
-  app.get(/^(?!\/api).*/, (_req, res) => {
-    res.sendFile(join(clientDist, 'index.html'))
-  })
-}
+app.get(/^(?!\/api).*/, (_req, res, next) => {
+  sendDistFile('index.html', res, next)
+})
 
 export default app
