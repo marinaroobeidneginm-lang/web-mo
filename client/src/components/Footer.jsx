@@ -29,6 +29,9 @@ export default function Footer({ nombre }) {
           <Link to="/nosotros" className="hover:text-white">
             Nosotros
           </Link>
+          <Link to="/tasaciones" className="hover:text-white">
+            Tasaciones
+          </Link>
         </nav>
       </div>
     </footer>

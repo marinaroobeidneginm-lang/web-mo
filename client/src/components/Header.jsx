@@ -18,12 +18,7 @@ export default function Header({ nombre }) {
             alt="Logo Marinaro Obeid"
             className="h-9 w-9 rounded-lg object-cover"
           />
-          <span className="text-xl font-bold text-primary-700">
-            {"Marinaro Obeid"}
-          </span>
-          <span className="text-lg font-semibold text-primary-600">
-            {" | Negocios Inmobiliarios"}
-          </span>
+          <span className="text-xl font-bold text-primary-700">{nombre}</span>
         </SectionLink>
 
         <nav className="hidden gap-8 sm:flex">
@@ -41,6 +36,12 @@ export default function Header({ nombre }) {
             className="text-sm font-medium text-slate-600 transition-colors hover:text-primary-600"
           >
             Nosotros
+          </Link>
+          <Link
+            to="/tasaciones"
+            className="text-sm font-medium text-slate-600 transition-colors hover:text-primary-600"
+          >
+            Tasaciones
           </Link>
         </nav>
 
