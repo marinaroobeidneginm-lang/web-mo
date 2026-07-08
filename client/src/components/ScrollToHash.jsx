@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { scrollToSectionWhenReady } from '../utils/scrollToSection'
-import { scrollToSectionWhenReady } from '../utils/scrollToSection'
 
 export default function ScrollToHash() {
   const { pathname, hash, state } = useLocation()
