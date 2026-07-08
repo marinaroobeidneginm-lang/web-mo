@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { scrollToSectionWhenReady } from '../utils/scrollToSection'
+import { scrollToSectionWhenReady } from '../utils/scrollToSection'
 
 export default function ScrollToHash() {
-  const location = useLocation()
-  const { pathname, hash, state } = location
+  const { pathname, hash, state } = useLocation()
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -13,7 +13,8 @@ export default function ScrollToHash() {
   }, [])
 
   useEffect(() => {
-    if (pathname !== '/') return undefined
+    if (pathname !== '/' || !hash) return
+    if (state?.scrollTo) return
 
     const sectionId = state?.scrollTo || (hash ? hash.slice(1) : null)
     if (!sectionId) return undefined
