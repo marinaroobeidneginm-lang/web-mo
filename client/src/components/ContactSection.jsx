@@ -55,14 +55,14 @@ export default function ContactSection({ contact, loading, error }) {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ContactItem icon="📍" label="Dirección" value={contact.direccion} />
-          <ContactItem
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+          {/* <ContactItem icon="📍" label="Dirección" value={contact.direccion} /> */}
+          {/* <ContactItem
             icon="📞"
             label="Teléfono"
             value={contact.telefono}
             href={`tel:${contact.telefono.replace(/\s/g, '')}`}
-          />
+          /> */}
           <ContactItem
             icon="💬"
             label="WhatsApp"
