@@ -11,7 +11,7 @@ export default function Home() {
   const location = useLocation()
   const { contact, loading: loadingContact, error: errorContact } = useContact()
 
-  const nombre = contact?.nombre ?? 'Marinaro Obeid Inmobiliaria'
+  const nombre = contact?.nombre ?? 'Marinaro Obeid Negocios Inmobiliarios'
 
   useEffect(() => {
     const scrollTarget =

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import SectionLink from './SectionLink'
 
 export default function Footer({ nombre }) {
@@ -25,6 +26,9 @@ export default function Footer({ nombre }) {
               {link.label}
             </SectionLink>
           ))}
+          <Link to="/nosotros" className="hover:text-white">
+            Nosotros
+          </Link>
         </nav>
       </div>
     </footer>

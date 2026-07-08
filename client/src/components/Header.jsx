@@ -36,6 +36,12 @@ export default function Header({ nombre }) {
               {link.label}
             </SectionLink>
           ))}
+          <Link
+            to="/nosotros"
+            className="text-sm font-medium text-slate-600 transition-colors hover:text-primary-600"
+          >
+            Nosotros
+          </Link>
         </nav>
 
         <SectionLink

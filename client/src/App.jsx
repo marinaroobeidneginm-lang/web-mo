@@ -3,6 +3,7 @@ import ScrollToHash from './components/ScrollToHash'
 import AdminLayout from './components/admin/AdminLayout'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 import Home from './pages/Home'
+import About from './pages/About'
 import PropertyDetail from './pages/PropertyDetail'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminPropertyList from './pages/admin/AdminPropertyList'
@@ -15,6 +16,7 @@ function App() {
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/nosotros" element={<About />} />
         <Route path="/propiedades/:id" element={<PropertyDetail />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
