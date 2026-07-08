@@ -4,6 +4,7 @@ import AdminLayout from './components/admin/AdminLayout'
 import ProtectedRoute from './components/admin/ProtectedRoute'
 import Home from './pages/Home'
 import About from './pages/About'
+import Tasaciones from './pages/Tasaciones'
 import PropertyDetail from './pages/PropertyDetail'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminPropertyList from './pages/admin/AdminPropertyList'
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/nosotros" element={<About />} />
+        <Route path="/tasaciones" element={<Tasaciones />} />
         <Route path="/propiedades/:id" element={<PropertyDetail />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
