@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { scrollToSection } from '../utils/scrollToSection'
 
 export default function SectionLink({ section, children, className }) {
   const location = useLocation()
@@ -9,12 +10,13 @@ export default function SectionLink({ section, children, className }) {
     event.preventDefault()
 
     if (location.pathname === '/') {
-      document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' })
       window.history.replaceState(null, '', hash)
+      scrollToSection(section, { behavior: 'auto' })
       return
     }
 
-    navigate('/' + hash)
+    // Dejá el scroll programado para que Home lo ejecute luego del render.
+    navigate({ pathname: '/', hash, state: { scrollTo: section } })
   }
 
   return (
