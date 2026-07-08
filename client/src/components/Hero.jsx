@@ -11,7 +11,7 @@ export default function Hero({ nombre }) {
         <div className="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-accent-400" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 py-26 sm:px-6 sm:py-24 lg:py-22">
+      <div className="relative mx-auto max-w-6xl px-4 pt-8 pb-24 sm:px-6 sm:pt-12 sm:pb-24 lg:pt-6 lg:pb-22">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div>
             <p className="mb-3 text-sm font-medium uppercase tracking-widest text-primary-100">
