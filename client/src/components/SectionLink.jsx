@@ -10,21 +10,13 @@ export default function SectionLink({ section, children, className }) {
     event.preventDefault()
 
     if (location.pathname === '/') {
-<<<<<<< HEAD
-      scrollToSection(section)
-=======
->>>>>>> dev
       window.history.replaceState(null, '', hash)
       scrollToSection(section, { behavior: 'auto' })
       return
     }
 
-<<<<<<< HEAD
-    navigate({ pathname: '/', hash }, { state: { scrollTo: section } })
-=======
     // Dejá el scroll programado para que Home lo ejecute luego del render.
     navigate({ pathname: '/', hash, state: { scrollTo: section } })
->>>>>>> dev
   }
 
   return (
